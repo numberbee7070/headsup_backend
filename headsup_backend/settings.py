@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'authentication',
+    'data',
 ]
 
 MIDDLEWARE = [
@@ -123,7 +124,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, '/media/')
+
 # firebase setup
 
-cred = credentials.Certificate(BASE_DIR + "/service_account.json")
+cred = credentials.Certificate(os.path.join(BASE_DIR, "/service_account.json"))
 firebase_admin.initialize_app(cred)
