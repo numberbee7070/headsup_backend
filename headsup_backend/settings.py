@@ -128,5 +128,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '/media/')
 
 # firebase setup
 
-cred = credentials.Certificate(os.path.join(BASE_DIR, "/service_account.json"))
+cred = credentials.Certificate(os.path.join(BASE_DIR, "service_account.json"))
 firebase_admin.initialize_app(cred)
