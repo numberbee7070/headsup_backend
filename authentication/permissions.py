@@ -5,7 +5,7 @@ from .models import FirebaseUser
 
 class FirebaseAuthPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        token = request.META['Authorization'].split(' ')[-1]
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[-1]
         try:
             uid = verify_id_token(token)["uid"]
             # pylint: disable=no-member
