@@ -22,12 +22,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '-5kz^exwmk3x@q09s_9=cqm@(@00745^w4lq1va6fes%elxk&n'
+SECRET_KEY = os.environ.get(
+    "HEADSUP_KEY", '-5kz^exwmk3x@q09s_9=cqm@(@00745^w4lq1va6fes%elxk&n')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.getenv("PRODUCTION"):
+    DEBUG = False
+else:
+    DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -130,3 +134,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '/media/')
 
 cred = credentials.Certificate(os.path.join(BASE_DIR, "service_account.json"))
 firebase_admin.initialize_app(cred)
+
+# rest framework
+if not DEBUG:
+    REST_FRAMEWORK = {
+        'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer', ),
+    }
