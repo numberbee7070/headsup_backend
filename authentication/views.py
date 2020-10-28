@@ -16,8 +16,7 @@ class UserView(CSRFExemptMixin, generics.RetrieveAPIView):
 
     def get_object(self):
         try:
-            token = self.request.META['HTTP_Authorization'].split(' ')[-1]
-            return get_firebase_user(token)
+            return get_firebase_user(self.request)
         except Exception as e:
             print(e)
             raise AuthenticationFailed("authentication failed")
