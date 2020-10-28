@@ -1,10 +1,11 @@
+from firebase_admin.auth import (CertificateFetchError, InvalidIdTokenError,
+                                 RevokedIdTokenError, verify_id_token)
 from rest_framework import serializers, status
-from firebase_admin.auth import (verify_id_token, InvalidIdTokenError,
-                                 RevokedIdTokenError, CertificateFetchError)
+
 from .models import FirebaseUser
 
 
-class NewFirebaseUserSerializer(serializers.Serializer):
+class FirebaseUserSerializer(serializers.Serializer):
     idtoken = serializers.CharField(write_only=True)
     username = serializers.CharField(max_length=100)
 
@@ -13,18 +14,18 @@ class NewFirebaseUserSerializer(serializers.Serializer):
             uid = verify_id_token(value)["uid"]
         except ValueError:
             raise serializers.ValidationError(
-                "Not a valid type", code=status.HTTP_400_BAD_REQUEST)
+                "Not a valid type", code="invalid-idtoken-type")
         except InvalidIdTokenError:
             raise serializers.ValidationError(
-                "Invalid id token", code=status.HTTP_401_UNAUTHORIZED)
+                "Invalid id token", code="invalid-idtoken")
         except CertificateFetchError:
             raise serializers.ValidationError(
-                "Internal server error", code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                "Internal server error", code="internal-server-error")
 
         # pylint: disable=no-member
         if FirebaseUser.objects.filter(uid=uid).exists():
             raise serializers.ValidationError(
-                "user already exists", code=status.HTTP_409_CONFLICT)
+                "User already exists", code="user-already-exists")
         return uid
 
     def create(self, validated_data):
