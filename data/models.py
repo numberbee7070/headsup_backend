@@ -3,7 +3,7 @@ from authentication.models import FirebaseUser
 
 
 def diary_photo_path(instance, filename):
-    return 'u%d/%d_%s' % (instance.user.id, instance.id, filename)
+    return 'u%d/%s' % (instance.user.id, filename)
 
 
 class DiaryEntry(models.Model):

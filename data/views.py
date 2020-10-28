@@ -1,17 +1,22 @@
-from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
-from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
-from .models import DiaryEntry
 from authentication.permissions import FirebaseAuthPermission
 from authentication.utils import get_firebase_user
+from rest_framework import generics
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
+
+from .models import DiaryEntry
+from .serializers import DiarySerializer
 
 
-class DiaryCreateListRetriveView(CreateModelMixin, RetrieveModelMixin,  ListModelMixin, GenericAPIView):
+class DiaryListCreateView(generics.ListCreateAPIView):
+    serializer_class = DiarySerializer
     parser_classes = (JSONParser, MultiPartParser, FormParser,)
     permission_classes = (FirebaseAuthPermission,)
 
+    def perform_create(self, serializer):
+        user = get_firebase_user(self.request)
+        serializer.save(user=user)
+
     def get_queryset(self):
-        user = get_firebase_user(
-            self.request.META['Authorization'].split(' ')[-1])
+        user = get_firebase_user(self.request)
         # pylint: disable=no-member
         return DiaryEntry.objects.filter(user=user)
