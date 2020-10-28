@@ -32,9 +32,9 @@ def article_view(request, chapter=None):
         data = collection.find_one({"chapter": chapter}, {"_id": False})
         return JsonResponse(data)
     data = collection.find(
-        {'_id': False,
-         'chapter': True,
-         "body": {"text": False}
-         }
+        projection={'_id': False,
+                    'chapter': True,
+                    "body": {"title": True}
+                    }
     )
     return JsonResponse(list(data), safe=False)
