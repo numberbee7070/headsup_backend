@@ -3,7 +3,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 from .permissions import FirebaseAuthPermission
 from .serializers import FirebaseUserSerializer
-from .utils import CSRFExemptMixin, get_firebase_user
+from .utils import CSRFExemptMixin
 
 
 class NewUserView(CSRFExemptMixin, generics.CreateAPIView):
@@ -15,8 +15,4 @@ class UserView(CSRFExemptMixin, generics.RetrieveAPIView):
     permission_classes = (FirebaseAuthPermission,)
 
     def get_object(self):
-        try:
-            return get_firebase_user(self.request)
-        except Exception as e:
-            print(e)
-            raise AuthenticationFailed("authentication failed")
+        return self.request.firebase_user

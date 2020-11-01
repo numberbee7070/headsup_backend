@@ -1,5 +1,5 @@
-from firebase_admin.auth import (CertificateFetchError, InvalidIdTokenError,
-                                 RevokedIdTokenError, verify_id_token)
+from firebase_admin.auth import (InvalidIdTokenError, RevokedIdTokenError,
+                                 verify_id_token)
 from rest_framework import serializers, status
 
 from .models import FirebaseUser
@@ -18,9 +18,6 @@ class FirebaseUserSerializer(serializers.Serializer):
         except InvalidIdTokenError:
             raise serializers.ValidationError(
                 "Invalid id token", code="invalid-idtoken")
-        except CertificateFetchError:
-            raise serializers.ValidationError(
-                "Internal server error", code="internal-server-error")
 
         # pylint: disable=no-member
         if FirebaseUser.objects.filter(uid=uid).exists():

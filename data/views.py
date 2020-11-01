@@ -1,40 +1,36 @@
 from authentication.permissions import FirebaseAuthPermission
-from authentication.utils import get_firebase_user
 from rest_framework import generics
-from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
-from django.views import View
-from django.http import JsonResponse
 
-from .models import DiaryEntry
-from .serializers import DiarySerializer
-import pymongo
+from .models import Article, DiaryEntry
+from .serializers import (ArticleSerializer, DiarySerializer,
+                          ListArticleSerializer)
+
+from authentication.utils import CSRFExemptMixin
 
 
-class DiaryListCreateView(generics.ListCreateAPIView):
+class DiaryListCreateView(CSRFExemptMixin, generics.ListCreateAPIView):
     serializer_class = DiarySerializer
-    parser_classes = (JSONParser, MultiPartParser, FormParser,)
     permission_classes = (FirebaseAuthPermission,)
 
     def perform_create(self, serializer):
-        user = get_firebase_user(self.request)
+        user = self.request.firebase_user
         serializer.save(user=user)
 
     def get_queryset(self):
-        user = get_firebase_user(self.request)
+        user = self.request.firebase_user
         # pylint: disable=no-member
         return DiaryEntry.objects.filter(user=user)
 
 
-def article_view(request, chapter=None):
-    client = pymongo.MongoClient("mongodb://localhost:27017/")
-    collection = client.test.Reads
-    if chapter:
-        data = collection.find_one({"chapter": chapter}, {"_id": False})
-        return JsonResponse(data)
-    data = collection.find(
-        projection={'_id': False,
-                    'chapter': True,
-                    "body": {"title": True}
-                    }
-    )
-    return JsonResponse(list(data), safe=False)
+class ListArticleView(CSRFExemptMixin, generics.ListAPIView):
+    permission_classes = (FirebaseAuthPermission,)
+    serializer_class = ListArticleSerializer
+    # pylint: disable=no-member
+    queryset = Article.objects.all()
+
+
+class RetrieveArticleView(CSRFExemptMixin, generics.RetrieveAPIView):
+    permission_classes = (FirebaseAuthPermission,)
+    serializer_class = ArticleSerializer
+    # pylint: disable=no-member
+    queryset = Article.objects.all()
