@@ -1,9 +1,7 @@
 from django.urls import path
 
-from .views import DiaryListCreateView, ListArticleView, RetrieveArticleView
+from .views import DiaryListCreateView
 
 urlpatterns = [
     path('diary/', DiaryListCreateView.as_view()),
-    path('articles/', ListArticleView.as_view()),
-    path('articles/<int:pk>', RetrieveArticleView.as_view()),
 ]

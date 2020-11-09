@@ -1,11 +1,9 @@
 from authentication.permissions import FirebaseAuthPermission
+from authentication.utils import CSRFExemptMixin
 from rest_framework import generics
 
-from .models import Article, DiaryEntry
-from .serializers import (ArticleSerializer, DiarySerializer,
-                          ListArticleSerializer)
-
-from authentication.utils import CSRFExemptMixin
+from .models import DiaryEntry
+from .serializers import DiarySerializer
 
 
 class DiaryListCreateView(CSRFExemptMixin, generics.ListCreateAPIView):
@@ -20,17 +18,3 @@ class DiaryListCreateView(CSRFExemptMixin, generics.ListCreateAPIView):
         user = self.request.firebase_user
         # pylint: disable=no-member
         return DiaryEntry.objects.filter(user=user)
-
-
-class ListArticleView(CSRFExemptMixin, generics.ListAPIView):
-    permission_classes = (FirebaseAuthPermission,)
-    serializer_class = ListArticleSerializer
-    # pylint: disable=no-member
-    queryset = Article.objects.all()
-
-
-class RetrieveArticleView(CSRFExemptMixin, generics.RetrieveAPIView):
-    permission_classes = (FirebaseAuthPermission,)
-    serializer_class = ArticleSerializer
-    # pylint: disable=no-member
-    queryset = Article.objects.all()

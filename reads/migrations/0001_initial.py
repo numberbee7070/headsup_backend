@@ -8,17 +8,17 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('reads', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='FirebaseUser',
+            name='Article',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('username', models.CharField(max_length=100)),
-                ('uid', models.CharField(max_length=128, unique=True)),
-                ('favourites', models.ManyToManyField(to='reads.Article')),
+                ('title', models.CharField(max_length=200)),
+                ('body', models.TextField()),
+                ('audio', models.FileField(upload_to='articles/audio')),
+                ('image', models.ImageField(upload_to='articles/image')),
             ],
         ),
     ]

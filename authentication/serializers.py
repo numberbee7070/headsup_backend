@@ -8,6 +8,7 @@ from .models import FirebaseUser
 class FirebaseUserSerializer(serializers.Serializer):
     idtoken = serializers.CharField(write_only=True)
     username = serializers.CharField(max_length=100)
+    favourites = serializers.ListField(read_only=True)
 
     def validate_idtoken(self, value):
         try:
