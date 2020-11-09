@@ -34,5 +34,5 @@ class ArticleFavouriteView(APIView):
 
     def delete(self, request, pk):
         article = get_object_or_404(Article, pk=pk)
-        request.firebase_user.remove(article)
+        request.firebase_user.favourites.remove(article)
         return Response(FirebaseUserInfoSerializer(request.firebase_user).data)
