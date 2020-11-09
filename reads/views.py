@@ -1,5 +1,5 @@
 from authentication.permissions import FirebaseAuthPermission
-from authentication.serializers import FirebaseUserSerializer
+from authentication.serializers import FirebaseUserInfoSerializer
 from authentication.utils import CSRFExemptMixin
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
@@ -30,9 +30,9 @@ class ArticleFavouriteView(APIView):
     def put(self, request, pk):
         article = get_object_or_404(Article, pk=pk)
         request.firebase_user.favourites.add(article)
-        return Response(FirebaseUserSerializer(request.firebase_user).data)
+        return Response(FirebaseUserInfoSerializer(request.firebase_user).data)
 
     def delete(self, request, pk):
         article = get_object_or_404(Article, pk=pk)
         request.firebase_user.remove(article)
-        return Response(FirebaseUserSerializer(request.firebase_user).data)
+        return Response(FirebaseUserInfoSerializer(request.firebase_user).data)
