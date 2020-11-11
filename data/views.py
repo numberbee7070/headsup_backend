@@ -1,5 +1,6 @@
 from authentication.permissions import FirebaseAuthPermission
 from authentication.utils import CSRFExemptMixin
+from django.conf import settings
 from rest_framework import generics
 
 from .models import DiaryEntry
@@ -15,6 +16,9 @@ class DiaryListCreateView(CSRFExemptMixin, generics.ListCreateAPIView):
         serializer.save(user=user)
 
     def get_queryset(self):
-        user = self.request.firebase_user
         # pylint: disable=no-member
-        return DiaryEntry.objects.filter(user=user)
+        # access all when debug True
+        if settings.DEBUG:
+            return DiaryEntry.objects.order_by('-created')
+        user = self.request.firebase_user
+        return DiaryEntry.objects.filter(user=user).order_by('-created')
