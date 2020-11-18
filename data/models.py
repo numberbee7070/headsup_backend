@@ -10,4 +10,5 @@ class DiaryEntry(models.Model):
     user = models.ForeignKey(FirebaseUser, on_delete=models.CASCADE)
     content = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to=diary_photo_path)
+    image = models.ImageField(
+        upload_to=diary_photo_path, null=True, blank=True)
