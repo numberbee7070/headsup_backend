@@ -1,5 +1,5 @@
 from firebase_admin.auth import (InvalidIdTokenError, RevokedIdTokenError,
-                                 verify_id_token)
+                                 verify_id_token, get_user)
 from rest_framework import serializers, status
 
 from .models import FirebaseUser
@@ -19,10 +19,16 @@ class FirebaseUserSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 "Invalid id token", code="invalid-idtoken")
 
+        user_record = get_user(uid)
+        if user_record.email and not user_record.email_verified:
+            raise serializers.ValidationError(
+                "user not verified", code="user-not-verified")
+
         # pylint: disable=no-member
         if FirebaseUser.objects.filter(uid=uid).exists():
             raise serializers.ValidationError(
                 "User already exists", code="user-already-exists")
+
         return uid
 
     def create(self, validated_data):
