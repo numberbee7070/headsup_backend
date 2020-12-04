@@ -1,5 +1,6 @@
+from django.conf import settings
 from firebase_admin.auth import (InvalidIdTokenError, RevokedIdTokenError,
-                                 verify_id_token, get_user)
+                                 get_user, verify_id_token)
 from rest_framework import serializers, status
 
 from .models import FirebaseUser
@@ -10,6 +11,10 @@ class FirebaseUserSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=100)
 
     def validate_idtoken(self, value):
+        # for debugging
+        if settings.DEBUG:
+            return value
+
         try:
             uid = verify_id_token(value)["uid"]
         except ValueError:
@@ -45,3 +50,9 @@ class FirebaseUserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = FirebaseUser
         fields = ('username', 'favourites')
+
+
+class FirebaseUserRenameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FirebaseUser
+        fields = ('username', )
