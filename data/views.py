@@ -7,7 +7,7 @@ from .models import DiaryEntry
 from .serializers import DiarySerializer
 
 
-class DiaryListCreateView(CSRFExemptMixin, generics.ListCreateAPIView):
+class DiaryListCreateView(CSRFExemptMixin, generics.ListCreateAPIView, generics.UpdateAPIView):
     serializer_class = DiarySerializer
     permission_classes = (FirebaseAuthPermission,)
 
