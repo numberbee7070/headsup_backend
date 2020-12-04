@@ -10,16 +10,8 @@ class NewUserView(CSRFExemptMixin, generics.CreateAPIView):
     serializer_class = FirebaseUserSerializer
 
 
-class UserInfoView(CSRFExemptMixin, generics.RetrieveAPIView):
+class UserInfoView(CSRFExemptMixin, generics.RetrieveAPIView, generics.UpdateAPIView):
     serializer_class = FirebaseUserInfoSerializer
-    permission_classes = (FirebaseAuthPermission,)
-
-    def get_object(self):
-        return self.request.firebase_user
-
-
-class UserRenameView(CSRFExemptMixin, generics.UpdateAPIView):
-    serializer_class = FirebaseUserRenameSerializer
     permission_classes = (FirebaseAuthPermission,)
 
     def get_object(self):

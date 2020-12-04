@@ -50,6 +50,7 @@ class FirebaseUserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = FirebaseUser
         fields = ('username', 'favourites')
+        read_only_fields = ('favourites',)
 
 
 class FirebaseUserRenameSerializer(serializers.ModelSerializer):
