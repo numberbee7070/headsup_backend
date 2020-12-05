@@ -6,4 +6,4 @@ from .models import DiaryEntry
 class DiarySerializer(serializers.ModelSerializer):
     class Meta:
         model = DiaryEntry
-        fields = ('content', 'image', 'created')
+        fields = ('id', 'content', 'image', 'created')
