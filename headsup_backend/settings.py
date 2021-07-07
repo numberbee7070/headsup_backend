@@ -86,9 +86,8 @@ WSGI_APPLICATION = 'headsup_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'headsup',
-        'HOST': 'mongodb://localhost:27017'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
     }
 }
 
